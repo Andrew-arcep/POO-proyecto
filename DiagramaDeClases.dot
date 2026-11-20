@@ -1,0 +1,44 @@
+digraph G {
+  rankdir=TB; nodesep=0.3; ranksep=0.55; splines=polyline; fontname="Helvetica";
+  node [shape=record, fontname="Helvetica", fontsize=10, style=filled, fillcolor="#FFFFFF"];
+  edge [fontname="Helvetica", fontsize=9];
+
+  UI [label="{Interfaz Swing (ui)|VentanaPrincipal + 5 paneles}", fillcolor="#E8E8E8"];
+  Restaurante [label="{Restaurante (fachada)|+ abrirVisita() + pedir() + pagar()\n+ cerrarVisita()\n+ buscarCombinaciones(prot, X, estrategia)}", fillcolor="#FFF4CC"];
+  Estadisticas [label="{EstadisticasServicio|4 consultas por rango de fechas}", fillcolor="#FFF4CC"];
+  Obs [label="{«interface»\nObservadorRestaurante|+ actualizar(mesa, detalle)}", fillcolor="#D6EAF8"];
+
+  Mesa [label="{Mesa (contexto)|- estado: EstadoMesa\n- visita: Visita|+ abrirVisita() + pedir() + pagar()\n+ solicitarCuenta() + cerrarVisita()}", fillcolor="#D5F5E3"];
+  Estado [label="{«enum»\nEstadoMesa (State)|DISPONIBLE\nOCUPADA\nPENDIENTE_PAGO}", fillcolor="#D5F5E3"];
+
+  Visita [label="{Visita|- mesero, apertura, cierre\n- comensales (alias), porPersona|~ agregarLinea() ~ registrarPago() ~ cerrar()\n+ subtotalDe() + totalMesa() + saldo()}", fillcolor="#FDEBD0"];
+  Linea [label="{Visita.Linea|producto, cantidad,\nprecioAplicado, anulada}", fillcolor="#FDEBD0"];
+  Pago [label="{Visita.Pago|monto, referencia, fecha}", fillcolor="#FDEBD0"];
+
+  Menu [label="{Menu|- categorias: Map\n- opciones: Map|+ agregar() + modificar() + eliminar()\n+ buscar(List\<Predicate\>)}", fillcolor="#FDEBD0"];
+  Opcion [label="{OpcionMenu|nombre, categoria, calorias,\nprecio, disponible}", fillcolor="#FDEBD0"];
+
+  Metodo [label="{«abstract»\nMetodoPago|+ generarReferencia()\n# prefijo()}", fillcolor="#FADBD8"];
+  Efe [label="Efectivo", fillcolor="#FADBD8"]; Trj [label="Tarjeta", fillcolor="#FADBD8"]; Snp [label="Sinpe", fillcolor="#FADBD8"];
+
+  Estr [label="{«interface»\nEstrategiaCombinacion|+ generar(prot, listas, X)}", fillcolor="#E8DAEF"];
+  BT [label="BacktrackingConPoda", fillcolor="#E8DAEF"]; FB [label="FuerzaBruta", fillcolor="#E8DAEF"];
+  Comb [label="{Combinacion|opciones, calorias, precio}", fillcolor="#E8DAEF"];
+
+  Exc [label="{4 excepciones propias|MesaNoDisponible · PedidoEnVisitaCerrada\nPagoInvalido · LimiteCaloricoSinResultados}", fillcolor="#F2F3F4"];
+
+  // herencia / realización
+  edge [arrowhead=none, arrowtail=onormal, dir=back, style=solid];
+  Metodo -> Efe; Metodo -> Trj; Metodo -> Snp;
+  edge [arrowhead=onormal, arrowtail=none, dir=forward, style=dashed];
+  BT -> Estr; FB -> Estr; UI -> Obs;
+  // composición
+  edge [arrowhead=none, arrowtail=diamond, dir=back, style=solid];
+  Restaurante -> Mesa [headlabel="1..*"]; Restaurante -> Menu; Mesa -> Visita [headlabel="0..1"];
+  Visita -> Linea [headlabel="*"]; Visita -> Pago [headlabel="*"]; Menu -> Opcion [headlabel="*"];
+  // dependencias
+  edge [arrowhead=vee, arrowtail=none, dir=forward, style=dashed];
+  UI -> Restaurante; Estadisticas -> Restaurante;
+  Mesa -> Estado [label="estado"]; Mesa -> Obs [label="notifica"];
+  Restaurante -> Estr [label="usa"]; Estr -> Comb; Pago -> Metodo; Restaurante -> Exc [label="lanza"];
+}
