@@ -6,6 +6,14 @@ Proyecto de Programación Orientada a Objetos. Hecho en Java con Swing (no usa l
 
 Se necesita JDK 17 o más nuevo.
 
+La forma más fácil es abrir `Proyecto2_POO_Restaurante.jar` con doble clic, o desde la consola:
+
+```
+java -jar Proyecto2_POO_Restaurante.jar
+```
+
+Para compilarlo desde el código:
+
 Desde la carpeta del proyecto:
 
 ```
