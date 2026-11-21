@@ -12,9 +12,7 @@ La forma más fácil es abrir `Proyecto2_POO_Restaurante.jar` con doble clic, o 
 java -jar Proyecto2_POO_Restaurante.jar
 ```
 
-Para compilarlo desde el código:
-
-Desde la carpeta del proyecto:
+Para compilarlo desde el código, desde la carpeta del proyecto:
 
 ```
 mkdir out
